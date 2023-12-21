@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:slash_store/image_carousel.dart';
 import 'package:slash_store/main.dart';
+import 'package:slash_store/shopping_cart_page.dart';
 
 class SlashStore extends StatelessWidget {
   const SlashStore({super.key});
@@ -52,6 +53,8 @@ class _ProductListState extends State<ProductList> {
   Set<Product> favorites = Set<Product>();
   late List<dynamic>
       productJsonResponse; // Add this line to store the JSON response
+  late ShoppingCart shoppingCart = ShoppingCart();
+  // bool isDialogOpen = false; // Track if the dialog is open
 
   @override
   void initState() {
@@ -138,6 +141,105 @@ class _ProductListState extends State<ProductList> {
     });
   }
 
+  void addToShoppingCart(Product product) {
+    setState(() {
+      // closeDialog();
+      if (!shoppingCart.items.contains(product)) {
+        shoppingCart.items.add(product);
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              title: const Text('Add To shopping list '),
+              content: Text('${product.name} added to your shopping list .'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(color: Colors.blue), // Custom text color
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // navigate to the shopping cart page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ShoppingCartPage(shoppingCart: shoppingCart),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Go to Shopping List',
+                    style: TextStyle(color: Colors.blue), // Custom text color
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      } else if (shoppingCart.items.contains(product)) {
+        shoppingCart.items.remove(product);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              title: const Text('Remove  from shopping list '),
+              content:
+                  Text('${product.name} removed from your shopping list .'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(color: Colors.blue), // Custom text color
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // navigate to the shopping cart page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ShoppingCartPage(shoppingCart: shoppingCart),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Go to Shopping List',
+                    style: TextStyle(color: Colors.blue), // Custom text color
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
+  }
+
+  // closeDialog() {
+  //   // Close the dialog if it is open
+  //   if (isDialogOpen) {
+  //     Navigator.of(context).pop();
+  //     isDialogOpen = false;
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Product>>(
@@ -192,7 +294,7 @@ class _ProductListState extends State<ProductList> {
                             ),
                             child: Image.network(
                               product.imagePath,
-                              height: 90,
+                              height: 85,
                               width: double.infinity,
                               fit: BoxFit.contain,
                               errorBuilder: (context, error, stackTrace) {
@@ -246,10 +348,17 @@ class _ProductListState extends State<ProductList> {
                                 : Colors.white,
                           ),
                         ),
-                        const Icon(
-                          Icons.shopping_cart,
-                          color: Colors.white,
-                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.shopping_cart,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              addToShoppingCart(product);
+                            });
+                          },
+                        )
                       ],
                     ),
                   ],

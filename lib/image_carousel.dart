@@ -203,14 +203,14 @@ class _ImageCarouselState extends State<ImageCarousel> {
               children: [
                 Text(
                   widget.name,
-                  maxLines: 2,
+                  maxLines: 2, // Limit to 2 lines
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    // Limit to 2 lines
+                    color: Colors.white, // Set text color to white
+
                     overflow: TextOverflow
-                        .ellipsis, // Show ellipsis (...) for overflow // Set text color to white
+                        .ellipsis, // Show ellipsis (...) for overflow
                   ),
                 ),
                 Image.network(
@@ -245,10 +245,10 @@ class _ImageCarouselState extends State<ImageCarousel> {
                   style: const TextStyle(
                     fontSize: 20,
                     // fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.white, //Set text color to white
                     // Limit to 2 lines
                     overflow: TextOverflow
-                        .ellipsis, // Show ellipsis (...) for overflow // Set text color to white
+                        .ellipsis, // Show ellipsis (...) for overflow
                   ),
                 ),
               ],
@@ -256,7 +256,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
           ),
           const SizedBox(
             height: 16,
-          ), // Dots Indicator
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
